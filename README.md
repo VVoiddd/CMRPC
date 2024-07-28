@@ -16,4 +16,4 @@ Change My Rich Custom Presence (CMRPC) is a tool that automatically updates your
 
 
 ## Where the stinky one is 
-- https://github.com/notwithering/rpcmsg
+- [notwithering's Version that stinks](https://github.com/notwithering/rpcmsg)
