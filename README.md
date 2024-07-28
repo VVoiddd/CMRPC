@@ -14,3 +14,6 @@ Change My Rich Custom Presence (CMRPC) is a tool that automatically updates your
 - `hidden_channel_id`: The ID of the hidden channel where the bot uploads user avatars.
 - `owner_id`: The ID of the owner who is not affected by the bot's actions.
 
+
+## Where the stinky one is 
+- https://github.com/notwithering/rpcmsg
