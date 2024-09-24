@@ -1,6 +1,11 @@
 from pypresence import Presence
+import os
+from dotenv import load_dotenv
 
-client_id = 'CLIENDID'
+# Load environment variables from .env
+load_dotenv()
+
+client_id = os.getenv('CLIENT_ID')  # Load client ID for RPC from .env
 rpc = Presence(client_id)
 rpc.connect()
 
