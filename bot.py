@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import rpc_update
 import asyncio
+import os
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -13,9 +14,16 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 hidden_channel_id = REPLACE-WITH-CHANNEL-ID
 owner_id = REPLACE-WITH-OWNER-ID
 
+# Command Loader
+def load_commands(bot):
+    for filename in os.listdir('./commands'):
+        if filename.endswith('.py'):
+            bot.load_extension(f'commands.{filename[:-3]}')  # Load each command as an extension
+
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user}')
+    load_commands(bot)  # Load commands on bot start
 
 @bot.event
 async def on_message(message):
