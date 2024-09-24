@@ -83,10 +83,6 @@ Change My Rich Custom Presence (CMRPC) is a tool that automatically updates your
 
 ## Working On
 
-- **Version 1.1: Add Better Commands**
-    - Improving existing commands to provide better functionality and customization options.
-    - Status: In Progress
-
 - **Version 1.2: Fix Not Working On Other Windows Versions**
     - Addressing compatibility issues with other Windows versions.
     - Status: In Progress
@@ -96,8 +92,13 @@ Change My Rich Custom Presence (CMRPC) is a tool that automatically updates your
 ## Completed
 
 - **Version 1.0: Commands Loader**
-    - **Released on:** 24/09/2024 at 1:00 AM EST
-    - **Changes:** Implemented a modular command system, allowing custom commands to be added easily.
+    - **Released on:** 09/24/2024 at 1:00 AM EST
+    - **Changes:** Added a modular command loader, allowing custom commands to be added easily.
     - **Bug Fixes:** Fixed minor issues with how commands were being handled.
 
+- **Version 1.1: Add Better Commands**
+    - **Released on:** 09/24/2024 at 12:45 AM EST
+    - **Changes:** Improved existing commands to provide better functionality and customization options.
+    - **Bug Fixes:** Addressed errors related to command definitions and functionality.
 
+--- 
