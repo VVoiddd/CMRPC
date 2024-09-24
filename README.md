@@ -22,29 +22,6 @@ Change My Rich Custom Presence (CMRPC) is a tool that automatically updates your
 *Will Follow In This Order Below*
 
 <details>
-<summary>1.0 Add Commands Loader</summary>
-
-- Load and handle custom commands from a modular command system.
-- This will enable easier addition of new commands without changing the core code.
-
-</details>
-
-<details>
-<summary>1.1 Add Better Commands</summary>
-
-- Refine and improve existing commands for better functionality and user experience.
-- Focus on fixing bugs and adding more flexibility for customizing actions.
-
-</details>
-
-<details>
-<summary>1.2 Fix Not Working On Other Windows Versions</summary>
-
-- Patch compatibility issues so that CMRPC works across different versions of Windows.
-
-</details>
-
-<details>
 <summary>1.3 Add install.bat And start.bat For Easy Install And Use</summary>
 
 - Provide a simple installation and start process with batch files for easier setup.
@@ -102,13 +79,23 @@ Change My Rich Custom Presence (CMRPC) is a tool that automatically updates your
 
 </details>
 
-## Working On (Example)
+---
 
-- **Version 1.0: Commands Loader (Example)**
-    - Placeholder example: Working on implementing a modular command system.
-    - Status: In Progress (Example)
+## Working On
 
+- **Version 1.0: Commands Loader**
+    - Currently working on implementing a modular command system.
+    - Status: In Progress
 
+- **Version 1.1: Add Better Commands**
+    - Improving existing commands to provide better functionality and customization options.
+    - Status: In Progress
+
+- **Version 1.2: Fix Not Working On Other Windows Versions**
+    - Addressing compatibility issues with other Windows versions.
+    - Status: In Progress
+
+---
 
 ## Completed (Example)
 
@@ -120,4 +107,3 @@ Change My Rich Custom Presence (CMRPC) is a tool that automatically updates your
 - **Version 1.1: Add Better Commands (Example)**
     - **Released on:** DD/MM/YYYY (Example)
     - **Changes:** Placeholder example: Improved command responses, added error handling, and increased customization options.
-
