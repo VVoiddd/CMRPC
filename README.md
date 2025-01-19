@@ -15,7 +15,7 @@ Change My Rich Custom Presence (CMRPC) is a Discord bot that automatically updat
 2. Install required dependencies by running:
 
     ```bash
-    pip install discord pypresence
+    pip install -r requirements.txt
     ```
 
 3. Replace the following placeholders in the code with your own values:
