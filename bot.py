@@ -1,26 +1,32 @@
+from pypresence import Presence
 import discord
 from discord.ext import commands
 import json
 import os
-from pypresence import Presence
 import asyncio
+
+# Configuration
+INVITE_URL = "https://discord.gg/INVITE"  # Set your invite link here
+HIDDEN_CHANNEL_ID = HIDDEN_CHANNEL_ID  # Example Channel ID for RPC updates (replace with actual ID)
+COMMAND_CHANNELS = [COMMAND_CHANNELS]  # Example list of channel IDs (replace with actual IDs)
+OWNER_ID = OWNER_ID  # Replace with your Discord user ID
+WHITELIST_FILE = 'whitelist.json'
+CLIENT_ID = 'CLIENT_ID'  # Your application Client ID
 
 # Discord bot setup
 intents = discord.Intents.default()
 intents.message_content = True
-
 bot = commands.Bot(command_prefix='-', intents=intents)
 
-# Configuration
-HIDDEN_CHANNEL_ID = ID  # Channel where RPC should be updated and other actions should happen
-COMMAND_CHANNELS = [CHANNELID, CHANNELID]  # Channels where only commands are processed
-OWNER_ID = OWNER_ID  # Replace with your Discord user ID
-WHITELIST_FILE = 'whitelist.json'
+# Initialize Discord Rich Presence with CLIENT_ID
+def update_rich_presence(CLIENT_ID):
+    """Initializes the RPC Presence with the provided Client ID."""
+    rpc = Presence(CLIENT_ID)  # Initialize Presence with the provided CLIENT_ID
+    rpc.connect()  # Connect to Discord's RPC service
+    return rpc
 
-# Discord Rich Presence setup
-CLIENT_ID = '1237573994446589972'  # Replace with your application's Client ID
-rpc = Presence(CLIENT_ID)
-rpc.connect()
+# Initialize rpc object
+rpc = update_rich_presence(CLIENT_ID)
 
 # Load whitelist from JSON
 def load_whitelist():
@@ -38,7 +44,7 @@ def save_whitelist(whitelist_data):
         json.dump(whitelist_data, f, indent=4)
 
 # Update Rich Presence (asynchronous wrapper)
-async def update_rich_presence(state, details, large_image, large_text):
+async def update_rich_presence_on_message(state, details, large_image, large_text):
     """Updates the Discord Rich Presence with provided details asynchronously."""
     try:
         # Update Rich Presence in a separate thread to avoid blocking
@@ -47,7 +53,7 @@ async def update_rich_presence(state, details, large_image, large_text):
             details=details,
             large_image=large_image,
             large_text=large_text,
-            buttons=[{"label": "Join Discord", "url": "https://discord.gg/INVITE"}]
+            buttons=[{"label": "Join Discord", "url": INVITE_URL}]  # Use the global invite URL here
         )
         print(f"Rich Presence updated: {state} | {details} | Hover Text: {large_text}")
     except Exception as e:
@@ -60,7 +66,7 @@ whitelist_data = load_whitelist()
 async def on_ready():
     """Sets the default Rich Presence when the bot starts."""
     print(f"Logged in as {bot.user}")
-    await update_rich_presence("Type what you want and it will be here", "Your username would be here", "placeholder", "This can be your PFP")
+    await update_rich_presence_on_message("Type what you want and it will be here", "Your username would be here", "placeholder", "This can be your PFP")
     print("Default Rich Presence initialized.")
 
 @bot.event
@@ -74,6 +80,10 @@ async def on_message(message):
 
     # Convert user ID to string for comparison
     user_id_str = str(message.author.id)
+
+    # Ensure COMMAND_CHANNELS is iterable (can be either a single channel ID or a list)
+    if isinstance(COMMAND_CHANNELS, int):
+        COMMAND_CHANNELS = [COMMAND_CHANNELS]
 
     # Only process messages in the command channels
     if message.channel.id in COMMAND_CHANNELS:
@@ -92,13 +102,12 @@ async def on_message(message):
             avatar_url = message.author.display_avatar.url if message.author.display_avatar else "https://your_default_image_url_here.png"
             
             # Update Rich Presence with the avatar URL before kicking
-            await update_rich_presence(f"Message: {message.content}", f"From: {message.author.name}", avatar_url, message.author.name)
+            await update_rich_presence_on_message(f"Message: {message.content}", f"From: {message.author.name}", avatar_url, message.author.name)
             
             await message.guild.kick(message.author, reason="Non-whitelisted user")  # Kick the user
             # Send a DM with a new invite
-            invite_url = "https://discord.gg/INVITE"  # Updated invite link
             try:
-                await message.author.send(f"You've been kicked for not being whitelisted. Here is a new invite: {invite_url}")
+                await message.author.send(f"You've been kicked for not being whitelisted. Here is a new invite: {INVITE_URL}")
             except discord.Forbidden:
                 print(f"Could not send DM to {message.author.name}")
             return  # Prevent further processing for non-whitelisted users
@@ -107,7 +116,7 @@ async def on_message(message):
         if user_id_str in whitelist_data or message.author.id == OWNER_ID:
             await message.delete()  # Delete message for whitelisted users
             avatar_url = message.author.display_avatar.url if message.author.display_avatar else "https://your_default_image_url_here.png"
-            await update_rich_presence(message.content or "Type what you want and it will be here", f"From: {message.author.name}", avatar_url, message.author.name)
+            await update_rich_presence_on_message(message.content or "Type what you want and it will be here", f"From: {message.author.name}", avatar_url, message.author.name)
             print(f"Rich Presence updated for {message.author.name}: {message.content}")
 
 @bot.command()
@@ -171,7 +180,7 @@ async def removewhitelist(ctx, user: discord.User):
 async def force(ctx, *, message: str):
     """Forces a custom Rich Presence update."""
     if ctx.author.id == OWNER_ID:
-        await update_rich_presence(message, "Custom Rich Presence", "placeholder", "This can be your PFP")
+        await update_rich_presence_on_message(message, "Custom Rich Presence", "placeholder", "This can be your PFP")
         await ctx.send(f"Rich Presence updated to: {message}")
     else:
         await ctx.send("You do not have permission to use this command.")
