@@ -2,6 +2,8 @@
 
 Change My Rich Custom Presence (CMRPC) is a Discord bot that automatically updates the user's Discord Rich Presence based on messages in specific channels. It can update the user's avatar, message content, and display customized Rich Presence statuses.
 
+![Placeholder Image](./Placeholder.png)
+
 ## Features
 
 - **Rich Presence Update**: Automatically updates the user's Rich Presence with their avatar, name, and custom message whenever they send a message.
