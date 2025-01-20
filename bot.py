@@ -1,31 +1,24 @@
-from pypresence import Presence
 import discord
 from discord.ext import commands
 import json
 import os
+from rpc_update import update_rich_presence
 import asyncio
 
 # Configuration
-INVITE_URL = "https://discord.gg/INVITE"  # Set your invite link here
-HIDDEN_CHANNEL_ID = HIDDEN_CHANNEL_ID  # Example Channel ID for RPC updates (replace with actual ID)
-COMMAND_CHANNELS = [COMMAND_CHANNELS]  # Example list of channel IDs (replace with actual IDs)
-OWNER_ID = OWNER_ID  # Replace with your Discord user ID
+INVITE_URL = "https://discord.gg/YOUR_INVITE_LINK"  # Set your invite link here
+HIDDEN_CHANNEL_ID = 0  # Channel where RPC should be updated and other actions should happen
+COMMAND_CHANNELS = 0  # Can be a single channel ID or a list of channel IDs
+OWNER_ID = 0  # Replace with your Discord user ID
 WHITELIST_FILE = 'whitelist.json'
-CLIENT_ID = 'CLIENT_ID'  # Your application Client ID
+CLIENT_ID = 'YOUR_CLIENT_ID'  # Your application Client ID
 
 # Discord bot setup
 intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix='-', intents=intents)
 
-# Initialize Discord Rich Presence with CLIENT_ID
-def update_rich_presence(CLIENT_ID):
-    """Initializes the RPC Presence with the provided Client ID."""
-    rpc = Presence(CLIENT_ID)  # Initialize Presence with the provided CLIENT_ID
-    rpc.connect()  # Connect to Discord's RPC service
-    return rpc
-
-# Initialize rpc object
+# Initialize Discord Rich Presence with CLIENT_ID from bot.py
 rpc = update_rich_presence(CLIENT_ID)
 
 # Load whitelist from JSON
@@ -72,6 +65,8 @@ async def on_ready():
 @bot.event
 async def on_message(message):
     """Handles messages and updates Rich Presence dynamically."""
+    global COMMAND_CHANNELS  # Ensure the global COMMAND_CHANNELS variable is accessible here
+
     if message.author == bot.user:
         return
 
@@ -83,7 +78,7 @@ async def on_message(message):
 
     # Ensure COMMAND_CHANNELS is iterable (can be either a single channel ID or a list)
     if isinstance(COMMAND_CHANNELS, int):
-        COMMAND_CHANNELS = [COMMAND_CHANNELS]
+        COMMAND_CHANNELS = [COMMAND_CHANNELS]  # Ensure it's a list if it's a single ID
 
     # Only process messages in the command channels
     if message.channel.id in COMMAND_CHANNELS:
@@ -99,7 +94,7 @@ async def on_message(message):
             await message.channel.send(f"{message.author.mention}, you are not whitelisted!")  # Notify user
 
             # Fetch the user's avatar URL before kicking
-            avatar_url = message.author.display_avatar.url if message.author.display_avatar else "https://your_default_image_url_here.png"
+            avatar_url = message.author.display_avatar.url if message.author.display_avatar else "placeholder"
             
             # Update Rich Presence with the avatar URL before kicking
             await update_rich_presence_on_message(f"Message: {message.content}", f"From: {message.author.name}", avatar_url, message.author.name)
@@ -115,7 +110,7 @@ async def on_message(message):
         # If the user is whitelisted or the owner, just delete the message and update RPC
         if user_id_str in whitelist_data or message.author.id == OWNER_ID:
             await message.delete()  # Delete message for whitelisted users
-            avatar_url = message.author.display_avatar.url if message.author.display_avatar else "https://your_default_image_url_here.png"
+            avatar_url = message.author.display_avatar.url if message.author.display_avatar else "placeholder"
             await update_rich_presence_on_message(message.content or "Type what you want and it will be here", f"From: {message.author.name}", avatar_url, message.author.name)
             print(f"Rich Presence updated for {message.author.name}: {message.content}")
 
@@ -186,4 +181,4 @@ async def force(ctx, *, message: str):
         await ctx.send("You do not have permission to use this command.")
 
 if __name__ == "__main__":
-    bot.run('TOKEN')  # Replace with your bot's token
+    bot.run('YOUR_BOT_TOKEN')  # Replace with your bot's token
